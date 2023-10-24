@@ -16,6 +16,8 @@ var categories = new Array();
 
 var imageUrl;
 
+var taskKey = 0;
+
 const takePicture = async function () {
     var instance = M.Modal.getInstance($("#modal1"));
     instance.close();
@@ -77,7 +79,7 @@ const addItem = function () {
             '<input type="checkbox" class="valign-wrapper filled-in" onclick="moveItemDone(this);" />' +
             '<span></span>' +
             '</label>' +
-            '<a class="btn-floating waves-effect waves-light red" onclick="deleteItem(this);"><i class="material-icons">delete</i></a>' +
+            '<a class="btn-floating waves-effect waves-light red" onclick="deleteItem(this);"><i class="material-icons"  id="task'+ taskKey + '">delete</i></a>' +
             '</div>' +
             '</div>' +
             '</li>'
@@ -86,6 +88,7 @@ const addItem = function () {
     let date = new Date(todoItemDate);
     scheduleNotification(date, todoItem, todoItemDesc);
     $("#my-todo-list").append(itemTemplate);
+    setTask(itemTemplate);
     $("#todo-item").val('');
 }
 
@@ -116,6 +119,9 @@ const moveItemTodo = function (element) {
 
 const deleteItem = function (element) {
     var deleteItem = $(element).attr("onclick", "moveItemDone(this)").parents(".collection-item");
+    let clef = element.id;
+    console.log(clef);
+    delTask(clef);
     $(deleteItem).remove();
 }
 
@@ -136,23 +142,23 @@ const addCat = function () {
 }
 
 // Fonction pour charger une préférence
-const setPreference = async (text) => {
+const setTask = async (text) => {
 
-    // Utilisez la méthode `set` pour la stocker dans les préférences
     await npxPlugins.Preferences.set({
-        key: "1",  // Clé sous laquelle vous souhaitez stocker la chaîne
+        key: "task" + taskKey,  // Clé sous laquelle vous souhaitez stocker la chaîne
         value: text
     }).then(() => {
         console.log('Chaîne de caractères stockée avec succès.');
     }).catch(error => {
         console.error('Erreur lors de la sauvegarde de la chaîne :', error);
     });
+    taskKey++;
 }
 
-const getPreference = async (id) => {
+const getTask = async (clef) => {
 
     await npxPlugins.Preferences.get({
-        key: id
+        key: clef
       }).then(result => {
         if (result.value) {
           const maChaineRecuperee = result.value;
@@ -163,8 +169,14 @@ const getPreference = async (id) => {
       }).catch(error => {
         console.error('Erreur lors de la récupération de la chaîne :', error);
       });
-
 }
 
-setPreference('LOLOLOLOLOLOLOL');
-getPreference("1");
+function delTask(clef) {
+    npxPlugins.Preferences.remove({ key: clef })
+      .then(() => {
+        console.log(`Préférence avec la clé "${clef}" supprimée avec succès.`);
+      })
+      .catch(error => {
+        console.error(`Erreur lors de la suppression de la préférence avec la clé "${clef}" :`, error);
+      });
+  }
