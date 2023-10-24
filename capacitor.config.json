@@ -1,0 +1,11 @@
+{
+  "appId": "com.example.app",
+  "appName": "owapp",
+  "bundledWebRuntime": false,
+  "webDir": "www",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  }
+}
