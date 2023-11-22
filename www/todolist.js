@@ -1,15 +1,14 @@
 const npxPlugins = Plugins.Capacitor();
 
-var config = {
-    apiKey: "AIzaSyACQzKNlnkkPf5YMyfnFSEfWgdDCtzceus",
-    authDomain: "todolist-72f3a.firebaseapp.com",
-    databaseURL: "https://todolist-72f3a-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "todolist-72f3a",
-    storageBucket: "todolist-72f3a.appspot.com",
-    messagingSenderId: "68012756560",
-    appId: "1:68012756560:web:103f2ca483c5deeda1cb55",
-    measurementId: "G-5KZ5RZZ595"
-    };
+const config = {
+    apiKey: "AIzaSyC3FPfmxrdekpCizVIMW9KCRqC0NiyVyEs",
+    authDomain: "topfood-391d9.firebaseapp.com",
+    projectId: "topfood-391d9",
+    storageBucket: "topfood-391d9.appspot.com",
+    messagingSenderId: "850223433184",
+    appId: "1:850223433184:web:c1ef8c3a4bfeecd1251785",
+    measurementId: "G-N1NFJT7FV2"
+};
 
 firebase.initializeApp(config);
 var database = firebase.database();
@@ -72,7 +71,16 @@ const takePicture = async function () {
     });
     imageUrl = image.webPath;
     $("#imgvalid").val("Image ajoutée !");
-    instance.open();
+    var imageb64 = image.base64String;
+    var storageRef = firebase.storage().ref().child("images/file.jpeg");
+    var task = storageRef.putString('data:image/jpeg;base64,'+imageb64,
+        'data_url').then(function(snapshot) {
+        snapshot.ref.getDownloadURL().then(function(url){
+        // Afficher l’image dans un élément de la page
+        // Enregistrer l'URL dans la base de donnée, par exemple dans le profil de l'utilisateur si c'est une photo de profil
+        });
+    });
+    instance.open()
 }
 
 const scheduleNotification = async function (date, titre, msg) {
